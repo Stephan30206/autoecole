@@ -17,10 +17,9 @@ public class SeanceController {
 
     private final SeanceService service;
 
-    // GET /api/seances?eleveId=1
     @GetMapping
-    public List<SeanceResponse> historique(@RequestParam Long eleveId) {
-        return service.historiqueEleve(eleveId);
+    public List<SeanceResponse> historique(@RequestParam(required = false) Long eleveId) {
+        return eleveId == null ? service.toutesLesSeances() : service.historiqueEleve(eleveId);
     }
 
     @PostMapping

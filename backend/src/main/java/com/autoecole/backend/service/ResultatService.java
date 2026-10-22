@@ -25,6 +25,11 @@ public class ResultatService {
         return resultatRepo.findByEleveId(eleveId).stream().map(this::toResponse).toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<ResultatResponse> tousLesResultats() {
+        return resultatRepo.findAll().stream().map(this::toResponse).toList();
+    }
+
     @Transactional
     public ResultatResponse creer(ResultatRequest req) {
         Eleve eleve = eleveRepo.findById(req.idEleve())
