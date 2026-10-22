@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface AuthSessionRepository extends JpaRepository<AuthSession, Long> {
     Optional<AuthSession> findByTokenHashAndExpiresAtAfter(String tokenHash, Instant now);
+    void deleteByTokenHash(String tokenHash);
 }

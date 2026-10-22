@@ -124,6 +124,18 @@ public class AuthService {
         return new LoginResponse(rawToken, account.getRole(), account.getEleve() == null ? null : account.getEleve().getId(), account.getEleve() == null ? null : account.getEleve().getNom(), account.getEleve() == null ? null : account.getEleve().getPrenom(), account.getEmail());
     }
 
+    @Transactional
+    public void logout(String rawToken) {
+        if (rawToken != null && !rawToken.isBlank()) sessionRepository.deleteByTokenHash(hash(rawToken));
+    }
+
+    @Transactional(readOnly = true)
+    public LoginResponse currentUser(Long accountId) {
+        AuthAccount account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Session invalide"));
+        return new LoginResponse(null, account.getRole(), account.getEleve() == null ? null : account.getEleve().getId(), account.getEleve() == null ? null : account.getEleve().getNom(), account.getEleve() == null ? null : account.getEleve().getPrenom(), account.getEmail());
+    }
+
     @Transactional(readOnly = true)
     public Optional<AuthPrincipal> authenticate(String rawToken) {
         if (rawToken == null || rawToken.isBlank()) return Optional.empty();

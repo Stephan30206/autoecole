@@ -7,6 +7,10 @@ import com.autoecole.backend.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import com.autoecole.backend.security.AuthPrincipal;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
@@ -26,6 +30,20 @@ public class AuthController {
     @PostMapping("/login")
     public LoginResponse login(@Valid @RequestBody LoginRequest request) {
         return authService.login(request);
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public LoginResponse currentUser(Authentication authentication) {
+        AuthPrincipal principal = (AuthPrincipal) authentication.getPrincipal();
+        return authService.currentUser(principal.accountId());
+    }
+
+    @PostMapping("/logout")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> logout(@RequestHeader("Authorization") String authorization) {
+        authService.logout(authorization.substring(7));
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/verify")
