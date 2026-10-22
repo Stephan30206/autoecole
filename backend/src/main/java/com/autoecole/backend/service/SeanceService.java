@@ -28,6 +28,12 @@ public class SeanceService {
                 .stream().map(this::toResponse).toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<SeanceResponse> toutesLesSeances() {
+        return seanceRepo.findAllByOrderByDateSeanceAscHeureDebutAsc()
+                .stream().map(this::toResponse).toList();
+    }
+
     @Transactional
     public SeanceResponse creer(SeanceRequest req) {
         Eleve eleve = eleveRepo.findById(req.idEleve())

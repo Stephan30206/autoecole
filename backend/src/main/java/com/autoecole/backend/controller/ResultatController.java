@@ -19,8 +19,8 @@ public class ResultatController {
 
     // GET /api/resultats?eleveId=1
     @GetMapping
-    public List<ResultatResponse> parEleve(@RequestParam Long eleveId) {
-        return service.parEleve(eleveId);
+    public List<ResultatResponse> parEleve(@RequestParam(required = false) Long eleveId) {
+        return eleveId == null ? service.tousLesResultats() : service.parEleve(eleveId);
     }
 
     @PostMapping
